@@ -37,7 +37,8 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::paginate(5);
+        $projects = Project::with('type', 'technologies')->paginate(5);
+        // $projects = Project::paginate(5);
         return view('admin.projects.index', compact('projects'));
     }
 
@@ -68,7 +69,7 @@ class ProjectController extends Controller
         //salvare immagine in upload
         //prendere percorso immagine
 
-        if($request->hasFile('image')) {
+        if ($request->hasFile('image')) {
             // Se l'immagine è stata caricata, la salvo e otteniamo il percorso
             $imagePath = Storage::put('uploads', $data['image']);
         } else {
@@ -100,7 +101,8 @@ class ProjectController extends Controller
      */
     public function show($slug)
     {
-        $project = Project::where('slug', $slug)->firstOrFail();
+        $project = Project::with('type', 'technologies')->where('slug', $slug)->firstOrFail();
+        // $project = Project::where('slug', $slug)->firstOrFail();
         return view('admin.projects.show', compact('project'));
     }
 
