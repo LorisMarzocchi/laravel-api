@@ -1,0 +1,10 @@
+<h2>richiesta</h2>
+<h2>dati</h2>
+<ul>
+    <li>
+        {{$lead->name}}
+    </li>
+    <li>
+        {{$lead->name}}
+    </li>
+</ul>
