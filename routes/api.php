@@ -25,4 +25,4 @@ Route::get('projects/random', [ProjectController::class, 'random'])->name('api.p
 Route::get('projects/{project}', [ProjectController::class, 'show'])->name('api.projects.show');
 
 Route::get('types', [TypeController::class, 'index'])->name('api.types.index');
-Route::post('leads', [LeadController::class, 'store'])->name('api.leads.store');
+Route::post('leads/', [LeadController::class, 'store'])->name('api.leads.store');

@@ -8,28 +8,17 @@ use App\Mail\MailToAdmin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 class LeadController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
+    private $validations = [
+        'name'          => 'required|string|min:5|max:50',
+        'email'         => 'required|email|max:255',
+        'message'       => 'required|string',
+        'newsletter'    => 'required|boolean',
+    ];
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -39,65 +28,36 @@ class LeadController extends Controller
      */
     public function store(Request $request)
     {
-        // validare i dati
         $data = $request->all();
-        // salvare i dati
+
+        // validare i dati del lead
+        $validator = Validator::make($data, $this->validations);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success'   => false,
+                'errors'    => $validator->errors(),
+            ]);
+        }
+
+        // salvare i dati del lead nel database
         $newLead = new Lead();
-        $newLead->name = $data['name'];
-        $newLead->email = $data['email'];
-        $newLead->message = $data['message'];
-        $newLead->newsletter = $data['newsletter'];
+        $newLead->name          = $data['name'];
+        $newLead->email         = $data['email'];
+        $newLead->message       = $data['message'];
+        $newLead->newsletter    = $data['newsletter'];
         $newLead->save();
-        // inviare la mail
+
+        // inviare la mail al lead per conferma ricezione richiesta
         Mail::to($newLead->email)->send(new MailToLead($newLead));
-        // inviare la mail all'amministratore
+
+        // inviare la mail all'aministratore per gestire la richiesta del lead
         Mail::to(env('ADMIN_ADDRESS', 'admin@boolpress.com'))->send(new MailToAdmin($newLead));
-        // ritornare valore success al front-end
-        // return response()->json($request->all());
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Lead  $lead
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Lead $lead)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Lead  $lead
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Lead $lead)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Lead  $lead
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Lead $lead)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Lead  $lead
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Lead $lead)
-    {
-        //
+        // ritornare un valore di successo al frontend
+        return response()->json([
+            'success' => true,
+        ]);
     }
 }

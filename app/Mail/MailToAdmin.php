@@ -33,8 +33,8 @@ class MailToAdmin extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Mail To Admin',
-            replyTo: env('ADMIN_ADDRESS', 'admin@bollpress.com'),
+            subject: 'Nuova richiesta da' . $this->lead->name,
+            replyTo: env('ADMIN_ADDRESS', 'admin@boolpress.com')
 
         );
     }
@@ -47,7 +47,7 @@ class MailToAdmin extends Mailable
     public function content()
     {
         return new Content(
-            view: 'view.name',
+            view: 'emails.mail-to-admin',
         );
     }
 
