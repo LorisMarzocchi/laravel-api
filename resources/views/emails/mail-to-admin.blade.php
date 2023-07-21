@@ -1,10 +1,10 @@
-<h2>richiesta</h2>
-<h2>dati</h2>
+<h1>Nuova richiesta da gestire</h1>
+
+<h2>Dati utente</h2>
 <ul>
-    <li>
-        {{$lead->name}}
-    </li>
-    <li>
-        {{$lead->name}}
-    </li>
+    <li>Nome: {{ $lead->name }}</li>
+    <li>Email: {{ $lead->email }}</li>
 </ul>
+
+<h2>Messaggio</h2>
+<p>{{ $lead->message }}</p>
